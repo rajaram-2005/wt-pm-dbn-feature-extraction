@@ -1,0 +1,67 @@
+{
+  "model": "model-5-dbn",
+  "layers": [
+    64,
+    48,
+    32,
+    16,
+    8
+  ],
+  "params": 5521,
+  "pretrain": {
+    "algorithm": "CD-1",
+    "epochs_per_rbm": 15,
+    "lr": 0.1,
+    "batch_size": 64,
+    "visible_input": "thresholded sensor bits at depth 0; sampled binary chaining upward",
+    "recon_mse_per_rbm": [
+      0.0925,
+      0.0712,
+      0.063,
+      0.0725
+    ]
+  },
+  "fine_tune": {
+    "optimizer": "adam",
+    "stack_lr": 0.001,
+    "head_lr": 0.01,
+    "weight_decay": 0.0001,
+    "loss": "mse",
+    "epochs_completed": 128,
+    "early_stopping_patience": 20
+  },
+  "data": {
+    "fleet_turbines": 48,
+    "inspections": 2140,
+    "features": 64,
+    "target": "normalized RUL",
+    "split": "chronological campaign-day 65/15/20",
+    "day_range": [
+      8.978775815828705,
+      438.2471744382869
+    ]
+  },
+  "metrics": [
+    {
+      "split": "test",
+      "rmse_norm": 0.037923455238342285,
+      "rmse_days": 10.239333152770996,
+      "mae_days": 7.803473949432373,
+      "r2": 0.8739532232284546
+    },
+    {
+      "split": "val",
+      "rmse_norm": 0.03298928588628769,
+      "rmse_days": 8.90710735321045,
+      "mae_days": 7.161417484283447,
+      "r2": 0.9524299502372742
+    },
+    {
+      "split": "train",
+      "rmse_norm": 0.05340126156806946,
+      "rmse_days": 14.418340682983398,
+      "mae_days": 11.32581901550293,
+      "r2": 0.9445376992225647
+    }
+  ]
+}
