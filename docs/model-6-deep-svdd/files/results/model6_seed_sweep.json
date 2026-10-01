@@ -1,0 +1,43 @@
+{
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    42
+  ],
+  "note": "each seed regenerates the farm (fault turbines, onsets, ramps, noise) and the network init; same code, python model.py with SEED changed",
+  "summary": {
+    "model6": {
+      "auroc_mean": 0.885,
+      "auroc_sd": 0.016,
+      "auroc_min": 0.8651,
+      "f1_mean": 0.782,
+      "f1_sd": 0.038,
+      "events_detected": "68/72",
+      "median_delay_h_all_events": 56.5,
+      "false_alarm_events_per_100_turbine_days_mean": 0.04
+    },
+    "scaffold": {
+      "auroc_mean": 0.864,
+      "auroc_sd": 0.013,
+      "auroc_min": 0.8513,
+      "f1_mean": 0.702,
+      "f1_sd": 0.047,
+      "events_detected": "59/72",
+      "median_delay_h_all_events": 70.0,
+      "false_alarm_events_per_100_turbine_days_mean": 0.04
+    },
+    "mahalanobis": {
+      "auroc_mean": 0.877,
+      "auroc_sd": 0.009,
+      "auroc_min": 0.8689,
+      "f1_mean": 0.661,
+      "f1_sd": 0.059,
+      "events_detected": "63/72",
+      "median_delay_h_all_events": 95.0,
+      "false_alarm_events_per_100_turbine_days_mean": 1.032
+    }
+  }
+}

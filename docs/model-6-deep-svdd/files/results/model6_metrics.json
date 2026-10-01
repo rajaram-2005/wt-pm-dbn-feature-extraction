@@ -1,0 +1,449 @@
+{
+  "model": "model-6-deep-svdd",
+  "architecture": {
+    "layers": [
+      64,
+      128,
+      96,
+      64,
+      48,
+      32,
+      32
+    ],
+    "linear_layers": 6,
+    "bias": false,
+    "activation": "LeakyReLU(0.1)",
+    "params": 32256
+  },
+  "training": {
+    "preprocessing": "standardize + ZCA whitening (eigenvalue floor 0.01), fitted on the healthy training window",
+    "centre": "init_center: mean training representation, |c_i| >= 0.1",
+    "svdd": {
+      "optimizer": "adam",
+      "lr": 0.0001,
+      "weight_decay": 1e-06,
+      "batch_size": 256,
+      "epochs": 20,
+      "train_loss": 0.14009,
+      "val_loss": 0.20778
+    },
+    "threshold": "99% quantile of healthy validation distances",
+    "alarm_persistence_hours": 3
+  },
+  "data": {
+    "turbines": 24,
+    "days": 120,
+    "records": 69120,
+    "features": 64,
+    "feature_layout": "16 channels x (mean, std, min, max) per hour",
+    "split": "chronological: train days 0-70 (healthy), val 70-85 (healthy), test 85-120",
+    "faulty_turbines": 12,
+    "fault_types": [
+      "gearbox_bearing",
+      "generator_winding",
+      "pitch_misalignment",
+      "yaw_misalignment",
+      "drivetrain_bearing",
+      "rotor_imbalance"
+    ],
+    "test_faulty_records": 6607,
+    "test_records": 20160,
+    "fault_label": "severity > 0 (includes the earliest, near-invisible part of each ramp)"
+  },
+  "test": {
+    "model": "Model 6 (6-layer, bias-free)",
+    "auroc": 0.8651,
+    "threshold": 1.428947,
+    "pointwise": {
+      "precision": 1.0,
+      "recall": 0.5603,
+      "f1": 0.7182
+    },
+    "healthy_turbine_hourly_fpr": 0.0,
+    "false_alarm_events_per_100_turbine_days": 0.0,
+    "events_detected": "12/12",
+    "median_detection_delay_hours": 65.5,
+    "events": {
+      "rotor_imbalance": [
+        {
+          "turbine": 0,
+          "onset_day": 91.79,
+          "ramp_days": 4.78,
+          "detected": true,
+          "delay_hours": 32.0,
+          "severity_at_detection": 0.283
+        },
+        {
+          "turbine": 3,
+          "onset_day": 95.41,
+          "ramp_days": 6.82,
+          "detected": true,
+          "delay_hours": 43.0,
+          "severity_at_detection": 0.266
+        }
+      ],
+      "drivetrain_bearing": [
+        {
+          "turbine": 6,
+          "onset_day": 101.66,
+          "ramp_days": 8.47,
+          "detected": true,
+          "delay_hours": 66.0,
+          "severity_at_detection": 0.327
+        },
+        {
+          "turbine": 10,
+          "onset_day": 107.35,
+          "ramp_days": 5.95,
+          "detected": true,
+          "delay_hours": 32.0,
+          "severity_at_detection": 0.231
+        }
+      ],
+      "pitch_misalignment": [
+        {
+          "turbine": 7,
+          "onset_day": 105.86,
+          "ramp_days": 8.67,
+          "detected": true,
+          "delay_hours": 156.0,
+          "severity_at_detection": 0.753
+        },
+        {
+          "turbine": 9,
+          "onset_day": 95.09,
+          "ramp_days": 9.82,
+          "detected": true,
+          "delay_hours": 154.0,
+          "severity_at_detection": 0.658
+        }
+      ],
+      "gearbox_bearing": [
+        {
+          "turbine": 15,
+          "onset_day": 92.54,
+          "ramp_days": 7.33,
+          "detected": true,
+          "delay_hours": 65.0,
+          "severity_at_detection": 0.377
+        },
+        {
+          "turbine": 16,
+          "onset_day": 104.46,
+          "ramp_days": 6.66,
+          "detected": true,
+          "delay_hours": 109.0,
+          "severity_at_detection": 0.685
+        }
+      ],
+      "yaw_misalignment": [
+        {
+          "turbine": 17,
+          "onset_day": 91.89,
+          "ramp_days": 6.8,
+          "detected": true,
+          "delay_hours": 407.0,
+          "severity_at_detection": 1.0
+        },
+        {
+          "turbine": 23,
+          "onset_day": 88.88,
+          "ramp_days": 4.93,
+          "detected": true,
+          "delay_hours": 114.0,
+          "severity_at_detection": 0.976
+        }
+      ],
+      "generator_winding": [
+        {
+          "turbine": 18,
+          "onset_day": 89.28,
+          "ramp_days": 8.97,
+          "detected": true,
+          "delay_hours": 25.0,
+          "severity_at_detection": 0.12
+        },
+        {
+          "turbine": 19,
+          "onset_day": 100.63,
+          "ramp_days": 8.55,
+          "detected": true,
+          "delay_hours": 33.0,
+          "severity_at_detection": 0.167
+        }
+      ]
+    }
+  },
+  "auroc_by_epoch_diagnostic": {
+    "model6": {
+      "5": 0.8691,
+      "10": 0.8757,
+      "20": 0.8651,
+      "30": 0.8584,
+      "40": 0.8527
+    },
+    "scaffold": {
+      "5": 0.8462,
+      "10": 0.861,
+      "20": 0.8706,
+      "30": 0.866,
+      "40": 0.8584
+    }
+  },
+  "baseline_scaffold": {
+    "model": "original scaffold (3-layer, biases)",
+    "auroc": 0.8706,
+    "threshold": 0.001362,
+    "pointwise": {
+      "precision": 1.0,
+      "recall": 0.5715,
+      "f1": 0.7273
+    },
+    "healthy_turbine_hourly_fpr": 0.0,
+    "false_alarm_events_per_100_turbine_days": 0.0,
+    "events_detected": "10/12",
+    "median_detection_delay_hours": 65.5,
+    "events": {
+      "rotor_imbalance": [
+        {
+          "turbine": 0,
+          "onset_day": 91.79,
+          "ramp_days": 4.78,
+          "detected": true,
+          "delay_hours": 34.0,
+          "severity_at_detection": 0.301
+        },
+        {
+          "turbine": 3,
+          "onset_day": 95.41,
+          "ramp_days": 6.82,
+          "detected": true,
+          "delay_hours": 58.0,
+          "severity_at_detection": 0.358
+        }
+      ],
+      "drivetrain_bearing": [
+        {
+          "turbine": 6,
+          "onset_day": 101.66,
+          "ramp_days": 8.47,
+          "detected": true,
+          "delay_hours": 73.0,
+          "severity_at_detection": 0.362
+        },
+        {
+          "turbine": 10,
+          "onset_day": 107.35,
+          "ramp_days": 5.95,
+          "detected": true,
+          "delay_hours": 34.0,
+          "severity_at_detection": 0.245
+        }
+      ],
+      "pitch_misalignment": [
+        {
+          "turbine": 7,
+          "onset_day": 105.86,
+          "ramp_days": 8.67,
+          "detected": true,
+          "delay_hours": 119.0,
+          "severity_at_detection": 0.575
+        },
+        {
+          "turbine": 9,
+          "onset_day": 95.09,
+          "ramp_days": 9.82,
+          "detected": true,
+          "delay_hours": 131.0,
+          "severity_at_detection": 0.561
+        }
+      ],
+      "gearbox_bearing": [
+        {
+          "turbine": 15,
+          "onset_day": 92.54,
+          "ramp_days": 7.33,
+          "detected": true,
+          "delay_hours": 97.0,
+          "severity_at_detection": 0.559
+        },
+        {
+          "turbine": 16,
+          "onset_day": 104.46,
+          "ramp_days": 6.66,
+          "detected": true,
+          "delay_hours": 108.0,
+          "severity_at_detection": 0.679
+        }
+      ],
+      "yaw_misalignment": [
+        {
+          "turbine": 17,
+          "onset_day": 91.89,
+          "ramp_days": 6.8,
+          "detected": false,
+          "delay_hours": null,
+          "severity_at_detection": null
+        },
+        {
+          "turbine": 23,
+          "onset_day": 88.88,
+          "ramp_days": 4.93,
+          "detected": false,
+          "delay_hours": null,
+          "severity_at_detection": null
+        }
+      ],
+      "generator_winding": [
+        {
+          "turbine": 18,
+          "onset_day": 89.28,
+          "ramp_days": 8.97,
+          "detected": true,
+          "delay_hours": 35.0,
+          "severity_at_detection": 0.166
+        },
+        {
+          "turbine": 19,
+          "onset_day": 100.63,
+          "ramp_days": 8.55,
+          "detected": true,
+          "delay_hours": 28.0,
+          "severity_at_detection": 0.142
+        }
+      ]
+    },
+    "training": {
+      "epochs": 20,
+      "train_loss": 0.0002,
+      "val_loss": 0.00025
+    },
+    "params": 7296
+  },
+  "reference_mahalanobis": {
+    "model": "Mahalanobis distance (linear reference)",
+    "auroc": 0.8698,
+    "threshold": 106.792763,
+    "pointwise": {
+      "precision": 0.9987,
+      "recall": 0.4807,
+      "f1": 0.649
+    },
+    "healthy_turbine_hourly_fpr": 0.0004,
+    "false_alarm_events_per_100_turbine_days": 0.714,
+    "events_detected": "11/12",
+    "median_detection_delay_hours": 116.0,
+    "events": {
+      "rotor_imbalance": [
+        {
+          "turbine": 0,
+          "onset_day": 91.79,
+          "ramp_days": 4.78,
+          "detected": true,
+          "delay_hours": 40.0,
+          "severity_at_detection": 0.353
+        },
+        {
+          "turbine": 3,
+          "onset_day": 95.41,
+          "ramp_days": 6.82,
+          "detected": true,
+          "delay_hours": 92.0,
+          "severity_at_detection": 0.566
+        }
+      ],
+      "drivetrain_bearing": [
+        {
+          "turbine": 6,
+          "onset_day": 101.66,
+          "ramp_days": 8.47,
+          "detected": true,
+          "delay_hours": 116.0,
+          "severity_at_detection": 0.573
+        },
+        {
+          "turbine": 10,
+          "onset_day": 107.35,
+          "ramp_days": 5.95,
+          "detected": true,
+          "delay_hours": 38.0,
+          "severity_at_detection": 0.273
+        }
+      ],
+      "pitch_misalignment": [
+        {
+          "turbine": 7,
+          "onset_day": 105.86,
+          "ramp_days": 8.67,
+          "detected": true,
+          "delay_hours": 284.0,
+          "severity_at_detection": 1.0
+        },
+        {
+          "turbine": 9,
+          "onset_day": 95.09,
+          "ramp_days": 9.82,
+          "detected": true,
+          "delay_hours": 528.0,
+          "severity_at_detection": 1.0
+        }
+      ],
+      "gearbox_bearing": [
+        {
+          "turbine": 15,
+          "onset_day": 92.54,
+          "ramp_days": 7.33,
+          "detected": true,
+          "delay_hours": 195.0,
+          "severity_at_detection": 1.0
+        },
+        {
+          "turbine": 16,
+          "onset_day": 104.46,
+          "ramp_days": 6.66,
+          "detected": true,
+          "delay_hours": 173.0,
+          "severity_at_detection": 1.0
+        }
+      ],
+      "yaw_misalignment": [
+        {
+          "turbine": 17,
+          "onset_day": 91.89,
+          "ramp_days": 6.8,
+          "detected": false,
+          "delay_hours": null,
+          "severity_at_detection": null
+        },
+        {
+          "turbine": 23,
+          "onset_day": 88.88,
+          "ramp_days": 4.93,
+          "detected": true,
+          "delay_hours": 695.0,
+          "severity_at_detection": 1.0
+        }
+      ],
+      "generator_winding": [
+        {
+          "turbine": 18,
+          "onset_day": 89.28,
+          "ramp_days": 8.97,
+          "detected": true,
+          "delay_hours": 33.0,
+          "severity_at_detection": 0.157
+        },
+        {
+          "turbine": 19,
+          "onset_day": 100.63,
+          "ramp_days": 8.55,
+          "detected": true,
+          "delay_hours": 28.0,
+          "severity_at_detection": 0.142
+        }
+      ]
+    }
+  },
+  "seed": 42,
+  "runtime_s": 18.6
+}
