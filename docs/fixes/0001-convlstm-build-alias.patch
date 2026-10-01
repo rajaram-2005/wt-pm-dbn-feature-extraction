@@ -1,0 +1,13 @@
+--- a/model.py	2026-10-01 10:31:48.811253063 +0000
++++ b/model.py	2026-10-01 10:31:57.531297107 +0000
+@@ -136,6 +136,10 @@
+     return model
+ 
+ 
++# Platform alias: the wt-pm adapter (m02-convlstm-wear) imports the factory by this name.
++build_convlstm = build_model_4
++
++
+ # ----------------------------------------------------------------------------
+ # Evaluation
+ # ----------------------------------------------------------------------------
